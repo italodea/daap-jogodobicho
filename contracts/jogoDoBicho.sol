@@ -9,13 +9,8 @@ pragma experimental ABIEncoderV2;
 import "./owner.sol";
 
 contract JogoDoBicho is Mortal{
-    uint balance = 0;
+    uint256 public constant tokenPrice = 1000000000000000; // 1 value for 1000000000000000 wei
 
-    //Struct feita para diminuir uso de gás
-    struct JogosList{
-        mapping(address => Jogo) bichos;
-        bool _isDeleted;
-    }
 
     struct Jogo{
         address ownerAddress;
@@ -32,51 +27,51 @@ contract JogoDoBicho is Mortal{
         bool isValida;
     }
 
-    //mapping que armazena um mapping de listas e a informação de sua deleção ou não
+    struct JogosList{
+        mapping(address => Jogo) jogos;
+        bool _isDeleted;
+    }
+
     mapping(address => JogosList) jogosArray;
 
     address[] jogosOwners;
 
-    event ListUpdated(address listOwner);
+    event JogosUpdated(address listOwner);
 
-    modifier onlyJogoOwner(address end){
-        require(_onlyJogoOwner(end), "Voce nao pode executar esta acao nesse jogo");
+    modifier onlyJogoOwner(address addres){
+        require(addres == jogosArray[addres].jogos[addres].ownerAddress, "Voce nao pode executar esta acao nesse jogo");
         _;
     }
 
 
-    function _onlyJogoOwner(address _end) public view returns(bool){
-        return _end == jogosArray[_end].bichos[_end].ownerAddress;
-    }
-
-
     function createNewJogo(string memory tipoDeJogo, string memory jogoDate) public returns(bool){
-        require(msg.sender == jogosArray[msg.sender].bichos[msg.sender].ownerAddress, "Este jogador ja apostou hoje!");
-        jogosArray[msg.sender].bichos[msg.sender].ownerAddress = msg.sender;
-        jogosArray[msg.sender].bichos[msg.sender].tipoDeJogo = tipoDeJogo;
-        jogosArray[msg.sender].bichos[msg.sender].jogoDate = jogoDate;
+        jogosArray[msg.sender].jogos[msg.sender].ownerAddress = msg.sender;
+        jogosArray[msg.sender].jogos[msg.sender].tipoDeJogo = tipoDeJogo;
+        jogosArray[msg.sender].jogos[msg.sender].jogoDate = jogoDate;
         jogosOwners.push(msg.sender);
-        emit ListUpdated(msg.sender);
+        emit JogosUpdated(msg.sender);
         return true;
     }
 
 
     function addBichoToJogo(uint numero, uint valor) public onlyJogoOwner(msg.sender) returns (Bicho memory){
+        require(numero > 0 && numero < 26,"Bicho invalido");
+        require(valor > 0, "Valor invalido");
         uint256 id = hash(numero, valor, msg.sender);
-        Bicho memory bicho = Bicho(id, numero,valor, address(0),false);
-        jogosArray[msg.sender].bichos[msg.sender].bichos.push(bicho);
-        emit ListUpdated(msg.sender);
+        Bicho memory bicho = Bicho(id, numero,valor, msg.sender,false);
+        jogosArray[msg.sender].jogos[msg.sender].bichos.push(bicho);
+        emit JogosUpdated(msg.sender);
 
         return bicho;
     }
 
     function delBichoFromJogo(uint256 id) public onlyJogoOwner(msg.sender) returns(bool){
-        Bicho[] storage bichos = jogosArray[msg.sender].bichos[msg.sender].bichos;
+        Bicho[] storage bichos = jogosArray[msg.sender].jogos[msg.sender].bichos;
         for(uint i = 0; i < bichos.length; i++){
             if(bichos[i].id == id){
                 bichos[i] = bichos[bichos.length - 1];
                 bichos.pop();
-                emit ListUpdated(msg.sender);
+                emit JogosUpdated(msg.sender);
                 return true;
             }
         }
@@ -84,9 +79,23 @@ contract JogoDoBicho is Mortal{
     }
 
 
+    function buy() external payable {
+        uint _totalDoJogo = 0;
+        Bicho[] storage bichos = jogosArray[msg.sender].jogos[msg.sender].bichos;
+        require(bichos.length > 0, "Nao foi encontrado nenhum bicho nesse jogo");
+        for(uint i = 0; i < bichos.length; i++){
+            _totalDoJogo += bichos[i].valor;
+            bichos[i].isValida = true;
+            emit JogosUpdated(msg.sender);
+        }
+
+        require(msg.value == _totalDoJogo * tokenPrice, 'Need to send exact amount of wei');
+        msg.sender.transfer(_totalDoJogo);
+
+    }
+
     function finishJogo() public onlyJogoOwner(msg.sender) returns (bool){
         uint value = calcularTotalJogo(msg.sender);
-
 
         if(value == 0){
             return false;
@@ -97,31 +106,16 @@ contract JogoDoBicho is Mortal{
         deleteObjectFromArray(msg.sender);
 
 
-        emit ListUpdated(msg.sender);
+        emit JogosUpdated(msg.sender);
         return true;
     }
 
-
-    function toBicho(uint256 id, address addr) external payable returns (bool) {
-        require(jogosArray[addr].bichos[addr].bichos.length > 0, "Nao foi encontrado nenhum bicho nesse jogo!");
-        Bicho[] storage bichos = jogosArray[addr].bichos[addr].bichos;
-        for(uint i = 0; i < bichos.length; i++){
-            if(id == bichos[i].id && bichos[i].valor <= msg.value){
-                bichos[i].apostador = msg.sender;
-                bichos[i].isValida = true;
-                balance += msg.value - bichos[i].valor;
-                emit ListUpdated(addr);
-                return true;
-            }
-        }
-        return false;
-    }
 
 
 
     function calcularTotalJogo(address addr) internal view returns(uint){
         uint total = 0;
-        Bicho[] memory bichos = jogosArray[addr].bichos[addr].bichos;
+        Bicho[] memory bichos = jogosArray[addr].jogos[addr].bichos;
 
         for(uint i = 0; i < bichos.length; i++){
             if(bichos[i].valor > 0){
@@ -137,10 +131,10 @@ contract JogoDoBicho is Mortal{
     function returnJogo(address addr) public view returns(Jogo memory){
         require(jogosArray[addr]._isDeleted == false, "Este jogo nao existe!");
         Jogo memory jogo;
-        jogo.ownerAddress = jogosArray[addr].bichos[addr].ownerAddress;
-        jogo.tipoDeJogo = jogosArray[addr].bichos[addr].tipoDeJogo;
-        jogo.jogoDate = jogosArray[addr].bichos[addr].jogoDate;
-        jogo.bichos = jogosArray[addr].bichos[addr].bichos;
+        jogo.ownerAddress = jogosArray[addr].jogos[addr].ownerAddress;
+        jogo.tipoDeJogo = jogosArray[addr].jogos[addr].tipoDeJogo;
+        jogo.jogoDate = jogosArray[addr].jogos[addr].jogoDate;
+        jogo.bichos = jogosArray[addr].jogos[addr].bichos;
 
         return jogo;
     }
@@ -154,9 +148,9 @@ contract JogoDoBicho is Mortal{
             }
             Jogo memory lista;
             Bicho[] memory bichos;
-            lista.ownerAddress = jogosArray[jogosOwners[i]].bichos[jogosOwners[i]].ownerAddress;
-            lista.tipoDeJogo = jogosArray[jogosOwners[i]].bichos[jogosOwners[i]].tipoDeJogo;
-            lista.jogoDate = jogosArray[jogosOwners[i]].bichos[jogosOwners[i]].jogoDate;
+            lista.ownerAddress = jogosArray[jogosOwners[i]].jogos[jogosOwners[i]].ownerAddress;
+            lista.tipoDeJogo = jogosArray[jogosOwners[i]].jogos[jogosOwners[i]].tipoDeJogo;
+            lista.jogoDate = jogosArray[jogosOwners[i]].jogos[jogosOwners[i]].jogoDate;
             lista.bichos = bichos;
             jogosList[i] = lista;
         }

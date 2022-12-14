@@ -1,5 +1,5 @@
 // ENDEREÇO EHTEREUM DO CONTRATO
-var contractAddress = "0x5098C1393f3c159ba911D0915AED832F56A7bC29";
+var contractAddress = "0x10bd6Dd6c32A53ec5A54C6856d0a4A18A4B7b29B";
 
 // Inicializa o objeto DaapJogoDoBicho
 document.addEventListener("DOMContentLoaded", onDocumentLoad);
@@ -149,12 +149,12 @@ function finishJogo() {
   return DaapJogoDoBicho.contracts.Bicho.methods.finishJogo().call();
 }
 
-function toBicho() {
-  return DaapJogoDoBicho.contracts.Bicho.methods.toBicho().call();
+function Pagar() {
+  return DaapJogoDoBicho.contracts.Bicho.methods.Pagar().call();
 }
 
 function calcularTotalJogo() {
-  
+
   return DaapJogoDoBicho.contracts.Bicho.methods.calcularTotalJogo().call();
 }
 
