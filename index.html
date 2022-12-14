@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Jogo do bicho</title>
+  <link href="https://fonts.googleapis.com/css?family=Open Sans:400,700" rel="stylesheet" type="text/css" />
+  <link href="./css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+
+  <style>
+    .loading-animation {
+      align-items: center;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+      transform: scale(5);
+    }
+
+    .loading-animation {
+      animation: is-rotating 1s infinite;
+      border: 6px solid #e5e5e5;
+      border-radius: 50%;
+      border-top-color: #51d4db;
+      height: 50px;
+      width: 50px;
+    }
+
+    @keyframes is-rotating {
+      to {
+        transform: rotate(1turn);
+      }
+    }
+  </style>
+</head>
+
+<body class="bg-light">
+  <div class="container">
+    <div class="py-5 text-center">
+      <h2>Jogo do bicho</h2>
+      <p class="lead">
+        Exemplo de front-end para um smart contract da rede Ethereum.
+      </p>
+    </div>
+
+    <div class="page-one">
+      <p class="text-center">
+        <button type="button" class="btn btn-primary" onclick="createNewJogo()">Iniciar novo jogo</button>
+      </p>
+    </div>
+
+    <div class="page-two" style="display: none;">
+      <div class="container">
+        <h2 class="text-center">Insira os valores nos bichos que deseja apostar.</h2>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-1 offset-md-1"><img src="img/01.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/02.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/03.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/04.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/05.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-1 offset-md-1"><img src="img/06.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/07.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/08.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/09.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/10.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-1 offset-md-1"><img src="img/11.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/12.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/13.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/14.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/15.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-1 offset-md-1"><img src="img/16.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/17.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/18.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/19.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/20.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+      </div>
+      <br>
+      <div class="row">
+        <div class="col-md-1 offset-md-1"><img src="img/21.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/22.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/23.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/24.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+        <div class="col-md-1 offset-md-1"><img src="img/25.png" alt="" style="width:252%;height:auto"><input
+            class="input-bichos" type="text" style="width:250%;" value="0"></div>
+      </div>
+
+      <button type="button" class="btn btn-primary" onclick="addBichoToJogo()">Prosseguir</button>
+    </div>
+
+    <div class="page-three" style="display: block;">
+      <div class="row">
+        <table class="table">
+          <thead>
+            <tr>
+              <th style="text-align: center;" scope="col" colspan="3">RESUMO DA APOSTA</th>
+            </tr>
+            <tr>
+                <th class="text-center" scope="col">Bicho</th>
+                <th class="text-center" scope="col">Numero</th>
+                <th class="text-center" scope="col">Valor</th>
+              </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th class="small text-center">Cavalo</th>
+              <th class="small text-center">11</th>
+              <th class="small text-center">2</th>
+            </tr>
+          </tbody>
+          <tbody id="events" class="small text-center">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="page-loading" style="display:none;">
+      <div class="row">
+        <div class="col-sm-4 offset-sm-4 text-center">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Aguarde...</span>
+          </div>
+          <br>
+          <p class="text-center">
+            Aguarde...
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-progress" style="display: none;">
+      <div class="row">
+        <div class="col-sm-4 offset-sm-4 text-center">
+          <div class="spinner-border" role="status">
+            <span class="sr-only">Aguarde...</span>
+          </div>
+        </div>
+      </div>
+      <h2 class="text-center text-progress">Adicionando bicho X de Y...</h2>
+      <p class="text-center">(Aceite todas as transações no metamask)</p>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/web3/1.7.0/web3.min.js"></script>
+    <script src="./js/abi.js"></script>
+    <script src="./js/daap.js"></script>
+
+    <script>
+      function onlyNumberKey(evt) {
+        // Only ASCII character in that range allowed 
+        var ASCIICode = (evt.which) ? evt.which : evt.keyCode
+        console.log(ASCIICode)
+        if (ASCIICode == 46 || ASCIICode == 44) {
+          return true;
+        }
+        if (ASCIICode > 31 && (ASCIICode < 48 || ASCIICode > 57))
+          return false;
+        return true;
+      }
+    </script>
+</body>
+
+</html>
